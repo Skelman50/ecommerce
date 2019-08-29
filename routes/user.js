@@ -1,6 +1,10 @@
 import express from "express";
 import { findUserbyID } from "../controllers/user.js";
-import { requireSignIni, isAuth, isAdmin } from "../middlewares/user-middlewares/user.js";
+import {
+  requireSignIni,
+  isAuth,
+  isAdmin
+} from "../middlewares/user-middlewares/index.js";
 
 const userRouter = express.Router();
 
