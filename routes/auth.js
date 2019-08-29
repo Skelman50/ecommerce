@@ -1,5 +1,5 @@
 import express from "express";
-import { signUp, signIn, signOut, requireSignIni } from "../controllers/auth.js";
+import { signUp, signIn, signOut } from "../controllers/auth.js";
 import { validator } from "../helpers/validator/index.js";
 const { userSignUpValidator, validation } = validator;
 
