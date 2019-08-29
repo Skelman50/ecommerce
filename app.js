@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import { authRouter } from "./routes/auth.js";
 import { userRouter } from "./routes/user.js";
 
 dotenv.config();
@@ -21,6 +22,7 @@ mongoose
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 
 const port = process.env.PORT;

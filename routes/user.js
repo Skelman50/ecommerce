@@ -1,8 +1,21 @@
 import express from "express";
-import { signUp } from "../controllers/user.js";
+import { findUserbyID } from "../controllers/user.js";
+import { requireSignIni, isAuth, isAdmin } from "../controllers/auth.js";
 
 const userRouter = express.Router();
 
-userRouter.post("/signup", signUp);
+userRouter.get(
+  "/secret/:userId",
+  requireSignIni,
+  isAuth,
+  isAdmin,
+  (req, res) => {
+    res.json({
+      user: req.profile
+    });
+  }
+);
+
+userRouter.param("userId", findUserbyID);
 
 export { userRouter };

@@ -1,14 +1,16 @@
 import { User } from "../models/user.js";
 
-const signUp = (req, res) => {
-  const { body } = req;
-  const user = new User(body);
-  user.save((err, user) => {
-    if (err) {
-      return res.status(400).json({ err });
+export const findUserbyID = async (req, res, next, id) => {
+  try {
+    const user = await User.findById(id);
+    user.salt = undefined
+    user.hashed_password = undefined
+    if (!user) {
+      throw new Error();
     }
-    res.json({ user });
-  });
+    req.profile = user;
+    next();
+  } catch (error) {
+    res.status(404).json({ error: "User not found" });
+  }
 };
-
-export { signUp };
