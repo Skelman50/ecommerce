@@ -29,7 +29,6 @@ export const signIn = async (req, res) => {
       throw new Error();
     }
 
-    console.log(user.authenticate(password));
     if (!user.authenticate(password)) {
       res.status(401).json({ error: `Email or password don't match` });
       return;
@@ -55,7 +54,7 @@ export const requireSignIni = expressJwt({
 });
 
 export const isAuth = (req, res, next) => {
-  console.log(req)
+  console.log(req);
   let user = req.profile && req.auth && req.profile._id == req.auth._id;
 
   if (!user) {
