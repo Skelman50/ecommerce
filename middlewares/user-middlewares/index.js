@@ -6,7 +6,6 @@ export const requireSignIni = expressJwt({
 });
 
 export const isAuth = (req, res, next) => {
-  console.log(req);
   let user = req.profile && req.auth && req.profile._id == req.auth._id;
 
   if (!user) {
@@ -18,7 +17,7 @@ export const isAuth = (req, res, next) => {
 
 export const isAdmin = (req, res, next) => {
   if (req.profile.role === 0) {
-    res.status(403).json({ error: "Admin resource. Access danied" });
+    return res.status(403).json({ error: "Admin resource. Access danied" });
   }
 
   next();

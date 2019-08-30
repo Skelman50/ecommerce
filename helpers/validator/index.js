@@ -28,6 +28,30 @@ class Validator {
     }
     next();
   }
+
+  formDataValidation(fields) {
+    const {
+      name,
+      description,
+      price,
+      category,
+      shipping,
+      quantity,
+      photo
+    } = fields;
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !category ||
+      !shipping ||
+      !quantity ||
+      !photo
+    ) {
+      return false;
+    }
+    return true;
+  }
 }
 
 const validator = new Validator();
