@@ -9,18 +9,97 @@ export const createProduct = (req, res) => {
   form.keepExtensions = true;
   form.parse(req, async (err, fields, files) => {
     if (err) {
-      return res.status(400).json({ error: "Image could not be uploaded" });
+      return res.status(400).json({
+        error: "Image could not be uploaded"
+      });
     }
-    const isValid = validator.formDataValidation({...fields, ...files});
+    const isValid = validator.formDataValidation({
+      ...fields,
+      ...files
+    });
     if (!isValid) {
-      return res.status(400).json({ error: "All fields ar required" });
+      return res.status(400).json({
+        error: "All fields ar required"
+      });
     }
     const product = new Product(fields);
     if (files.photo) {
       if (files.photo.size > 500000) {
-        return res
-          .status(400)
-          .json({ error: "Image should be less than 500 kb in size" });
+        return res.status(400).json({
+          error: "Image should be less than 500 kb in size"
+        });
+      }
+      product.photo.data = fs.readFileSync(files.photo.path);
+      product.photo.contentType = files.photo.type;
+    }
+    try {
+      const result = await product.save();
+      res.json({ result });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  });
+};
+
+export const productById = async (req, res, next, id) => {
+  try {
+    const product = await Product.findById(id);
+    if (!product) throw new Error();
+    req.product = product;
+    next();
+  } catch (error) {
+    res.status(404).json({
+      error: "Product not found"
+    });
+  }
+};
+
+export const readProduct = (req, res) => {
+  req.product.photo = undefined;
+  res.json(req.product);
+};
+
+export const deleteProduct = async (req, res) => {
+  const product = req.product;
+  try {
+    const deletedProduct = await product.remove();
+    if (!deletedProduct) throw new Error();
+    res.json({
+      message: "Product deleted succesfully"
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      error: "Product not found"
+    });
+  }
+};
+
+export const updateProduct = async (req, res) => {
+  const form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      return res.status(400).json({
+        error: "Image could not be uploaded"
+      });
+    }
+    const isValid = validator.formDataValidation({
+      ...fields,
+      ...files
+    });
+    if (!isValid) {
+      return res.status(400).json({
+        error: "All fields ar required"
+      });
+    }
+    let product = req.product;
+    product = _.extend(product, fields);
+    if (files.photo) {
+      if (files.photo.size > 500000) {
+        return res.status(400).json({
+          error: "Image should be less than 500 kb in size"
+        });
       }
       product.photo.data = fs.readFileSync(files.photo.path);
       product.photo.contentType = files.photo.type;

@@ -6,7 +6,7 @@ export const requireSignIni = expressJwt({
 });
 
 export const isAuth = (req, res, next) => {
-  let user = req.profile && req.auth && req.profile._id == req.auth._id;
+  const user = req.profile && req.auth && req.profile._id == req.auth._id;
 
   if (!user) {
     return res.status(403).json({ error: "Access danied" });

@@ -5,7 +5,13 @@ import {
   isAdmin
 } from "../middlewares/user-middlewares/index.js";
 import { findUserbyID } from "../controllers/user.js";
-import { createProduct } from "../controllers/product.js";
+import {
+  createProduct,
+  productById,
+  readProduct,
+  deleteProduct,
+  updateProduct
+} from "../controllers/product.js";
 
 const productRouter = express.Router();
 
@@ -17,6 +23,25 @@ productRouter.post(
   createProduct
 );
 
+productRouter.get("/:productId", readProduct);
+
+productRouter.delete(
+  "/:productId/:userId",
+  requireSignIni,
+  isAuth,
+  isAdmin,
+  deleteProduct
+);
+
+productRouter.put(
+  "/:productId/:userId",
+  requireSignIni,
+  isAuth,
+  isAdmin,
+  updateProduct
+);
+
 productRouter.param("userId", findUserbyID);
+productRouter.param("productId", productById);
 
 export { productRouter };
