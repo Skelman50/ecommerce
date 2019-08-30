@@ -48,7 +48,7 @@ export const productById = async (req, res, next, id) => {
     req.product = product;
     next();
   } catch (error) {
-    res.status(404).json({
+    return res.status(404).json({
       error: "Product not found"
     });
   }
@@ -111,4 +111,22 @@ export const updateProduct = async (req, res) => {
       res.status(400).json({ error });
     }
   });
+};
+
+export const productsList = async (req, res) => {
+  const order = req.query.order ? req.query.order : "asc";
+  const sortBy = req.query.sortBy ? req.query.sortBy : "_id";
+  const limit = req.query.limit ? parseInt(req.query.limit) : 6;
+
+  try {
+    const products = await Product.find({})
+      .select("-photo")
+      .populate("categoty")
+      .sort([[sortBy, order]])
+      .limit(limit);
+
+    res.send(products);
+  } catch (error) {
+    res.status(400).json({ error: "Products not found" });
+  }
 };

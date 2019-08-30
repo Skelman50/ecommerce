@@ -1,5 +1,12 @@
 import express from "express";
-import { getCategory, createCategory } from "../controllers/category.js";
+import {
+  createCategory,
+  categotyById,
+  readCategory,
+  updateCategory,
+  deleteCategory,
+  getAllCategories
+} from "../controllers/category.js";
 import {
   requireSignIni,
   isAuth,
@@ -9,7 +16,6 @@ import { findUserbyID } from "../controllers/user.js";
 
 const categoryRouter = express.Router();
 
-categoryRouter.get("/", getCategory);
 categoryRouter.post(
   "/create/:userId",
   requireSignIni,
@@ -18,6 +24,27 @@ categoryRouter.post(
   createCategory
 );
 
+categoryRouter.put(
+  "/:categoryId/:userId",
+  requireSignIni,
+  isAuth,
+  isAdmin,
+  updateCategory
+);
+
+categoryRouter.delete(
+  "/:categoryId/:userId",
+  requireSignIni,
+  isAuth,
+  isAdmin,
+  deleteCategory
+);
+
+categoryRouter.get("/", getAllCategories);
+
+categoryRouter.get("/:categoryId", readCategory);
+
 categoryRouter.param("userId", findUserbyID);
+categoryRouter.param("categoryId", categotyById);
 
 export { categoryRouter };

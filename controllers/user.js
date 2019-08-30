@@ -12,6 +12,6 @@ export const findUserbyID = async (req, res, next, id) => {
     next();
   } catch (error) {
     console.log(error);
-    res.status(404).json({ error: "User not found" });
+    return res.status(404).json({ error: "User not found" });
   }
 };

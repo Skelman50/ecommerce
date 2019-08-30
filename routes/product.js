@@ -10,7 +10,8 @@ import {
   productById,
   readProduct,
   deleteProduct,
-  updateProduct
+  updateProduct,
+  productsList
 } from "../controllers/product.js";
 
 const productRouter = express.Router();
@@ -40,6 +41,8 @@ productRouter.put(
   isAdmin,
   updateProduct
 );
+
+productRouter.get("/", productsList);
 
 productRouter.param("userId", findUserbyID);
 productRouter.param("productId", productById);
