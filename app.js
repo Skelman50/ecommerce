@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import { authRouter } from "./routes/auth.js";
 import { userRouter } from "./routes/user.js";
 import { categoryRouter } from "./routes/category.js";
@@ -24,6 +25,7 @@ mongoose
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);

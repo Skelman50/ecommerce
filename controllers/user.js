@@ -15,3 +15,28 @@ export const findUserbyID = async (req, res, next, id) => {
     return res.status(404).json({ error: "User not found" });
   }
 };
+
+export const getUser = (req, res) => {
+  res.json(req.profile);
+};
+
+export const updateUser = async (req, res) => {
+  const {
+    profile: { _id },
+    body
+  } = req;
+  try {
+    const user = await User.findByIdAndUpdate(
+      _id,
+      {
+        $set: body
+      },
+      { new: true, useFindAndModify: false }
+    );
+    user.hashed_password = undefined;
+    user.salt = undefined;
+    res.json(user);
+  } catch (error) {
+    res.status(400).json({ error: "User not found" });
+  }
+};
