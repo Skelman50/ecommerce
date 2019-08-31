@@ -42,7 +42,7 @@ categoryRouter.delete(
 
 categoryRouter.get("/", getAllCategories);
 
-categoryRouter.get("/:categoryId", readCategory);
+categoryRouter.get("/once/:categoryId", readCategory);
 
 categoryRouter.param("userId", findUserbyID);
 categoryRouter.param("categoryId", categotyById);

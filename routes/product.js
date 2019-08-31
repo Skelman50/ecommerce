@@ -11,7 +11,11 @@ import {
   readProduct,
   deleteProduct,
   updateProduct,
-  productsList
+  productsList,
+  relatedProductList,
+  categoriesList,
+  listBySearch,
+  getPhoto
 } from "../controllers/product.js";
 
 const productRouter = express.Router();
@@ -24,7 +28,7 @@ productRouter.post(
   createProduct
 );
 
-productRouter.get("/:productId", readProduct);
+productRouter.get("/once/:productId", readProduct);
 
 productRouter.delete(
   "/:productId/:userId",
@@ -43,6 +47,12 @@ productRouter.put(
 );
 
 productRouter.get("/", productsList);
+
+productRouter.get("/related/:productId", relatedProductList);
+productRouter.get("/categories", categoriesList);
+
+productRouter.post("/by/search", listBySearch);
+productRouter.get("/once/photo/:productId", getPhoto);
 
 productRouter.param("userId", findUserbyID);
 productRouter.param("productId", productById);

@@ -27,8 +27,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
-app.use("/api/category", categoryRouter);
-app.use("/api/product", productRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/products", productRouter);
 
 const port = process.env.PORT;
 

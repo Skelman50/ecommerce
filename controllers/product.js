@@ -119,14 +119,87 @@ export const productsList = async (req, res) => {
   const limit = req.query.limit ? parseInt(req.query.limit) : 6;
 
   try {
-    const products = await Product.find({})
+    const products = await Product.find()
       .select("-photo")
       .populate("categoty")
       .sort([[sortBy, order]])
       .limit(limit);
 
-    res.send(products);
+    res.json(products);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "Products not found" });
+  }
+};
+
+export const relatedProductList = async (req, res) => {
+  const limit = req.query.limit ? parseInt(req.query.limit) : 6;
+  try {
+    const product = await Product.find({
+      _id: { $ne: req.product },
+      category: req.product.category
+    })
+      .limit(limit)
+      .populate("category", "_id, name");
+
+    if (!product) throw new Error();
+    res.json(product);
+  } catch (error) {
+    res.status(400).json({ error: "Product not found" });
+  }
+};
+
+export const categoriesList = async (req, res) => {
+  try {
+    const categories = await Product.distinct("category", {});
+    res.json(categories);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "Categories not found" });
+  }
+};
+
+export const listBySearch = async (req, res) => {
+  const order = req.body.order ? req.body.order : "asc";
+  const sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+  const limit = req.body.limit ? parseInt(req.body.limit) : 100;
+  const skip = parseInt(req.body.skip);
+  const findArgs = {};
+
+  for (let key in req.body.filters) {
+    if (req.body.filters[key].length > 0) {
+      if (key === "price") {
+        findArgs[key] = {
+          $gte: req.body.filters[key][0],
+          $lte: req.body.filters[key][1]
+        };
+      } else {
+        findArgs[key] = req.body.filters[key];
+      }
+    }
+  }
+
+  try {
+    const products = await Product.find(findArgs)
+      .select("-photo")
+      .populate("category")
+      .sort([[sortBy, order]])
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      size: products.length,
+      products
+    });
   } catch (error) {
     res.status(400).json({ error: "Products not found" });
   }
+};
+
+export const getPhoto = (req, res, next) => {
+  if (req.product.photo.data) {
+    res.set("Content-Type", req.product.photo.contentType);
+    return res.send(req.product.photo.data);
+  }
+  next();
 };
