@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import { type } from "os";
-import { signout } from "../user/helpers/auth";
+import { signout, isAuthenticate } from "../auth/auth";
 
 const isActive = (history, path) => {
   const {
@@ -17,15 +16,23 @@ const Menu = ({ history }) => {
   const links = [
     {
       to: "/",
-      name: "Home"
+      name: "Home",
+      isHome: true
+    },
+    {
+      to: "/user/dashboard",
+      name: "Dashboard",
+      isDashboard: true
     },
     {
       to: "/signin",
-      name: "Signin"
+      name: "Signin",
+      isSign: true
     },
     {
       to: "/signup",
-      name: "Signup"
+      name: "Signup",
+      isSign: true
     },
     {
       name: "Signout",
@@ -33,25 +40,36 @@ const Menu = ({ history }) => {
     }
   ];
 
+  const link = item => (
+    <Link className="nav-link" to={item.to} style={isActive(history, item.to)}>
+      {item.name}
+    </Link>
+  );
+
+  const isLink = item => {
+    const { isSign } = item;
+    if ((isSign && !isAuthenticate()) || !isSign) {
+      return link(item);
+    }
+  };
+
   const linksList = () =>
     links.map((item, idx) => (
       <li className="nav-item" key={idx}>
         {!item.isSignout ? (
-          <Link
-            className="nav-link"
-            to={item.to}
-            style={isActive(history, item.to)}
-          >
-            {item.name}
-          </Link>
+          isLink(item)
         ) : (
-          <span
-            className="nav-link"
-            style={{ cursor: "pointer", color: "#ffffff" }}
-            onClick={() => signout(() => history.push("/"))}
-          >
-            {item.name}
-          </span>
+          <React.Fragment>
+            {isAuthenticate() && (
+              <span
+                className="nav-link"
+                style={{ cursor: "pointer", color: "#ffffff" }}
+                onClick={() => signout(() => history.push("/"))}
+              >
+                {item.name}
+              </span>
+            )}
+          </React.Fragment>
         )}
       </li>
     ));
