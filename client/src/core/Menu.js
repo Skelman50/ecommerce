@@ -21,8 +21,13 @@ const Menu = ({ history }) => {
     },
     {
       to: "/user/dashboard",
-      name: "Dashboard",
-      isDashboard: true
+      name: "User Dashboard",
+      isUserDashboard: true
+    },
+    {
+      to: "/admin/dashboard",
+      name: "Admin Dashboard",
+      isAdminDashboard: true
     },
     {
       to: "/signin",
@@ -47,8 +52,17 @@ const Menu = ({ history }) => {
   );
 
   const isLink = item => {
-    const { isSign } = item;
-    if ((isSign && !isAuthenticate()) || !isSign) {
+    const { isSign, isUserDashboard, isAdminDashboard, isHome } = item;
+    if (
+      (isSign && !isAuthenticate()) ||
+      (isUserDashboard &&
+        isAuthenticate() &&
+        isAuthenticate().user.role === 0) ||
+      (isAdminDashboard &&
+        isAuthenticate() &&
+        isAuthenticate().user.role === 1) ||
+      isHome
+    ) {
       return link(item);
     }
   };

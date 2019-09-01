@@ -1,17 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const UserLinks = () => {
-  const links = [
-    {
-      name: "My cart",
-      to: "/cart"
-    },
-    {
-      name: "Update Profile",
-      to: "/profile/update"
-    }
-  ];
+const Links = ({ links, text }) => {
 
   const linksMap = () =>
     links.map((item, idx) => (
@@ -23,10 +13,10 @@ const UserLinks = () => {
     ));
   return (
     <div className="card">
-      <h4 className="card-header">User Links</h4>
+      <h4 className="card-header">{text}</h4>
       <ul className="list-group">{linksMap()}</ul>
     </div>
   );
 };
 
-export default UserLinks;
+export default Links;

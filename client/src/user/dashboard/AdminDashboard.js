@@ -4,7 +4,7 @@ import Card from "./Card";
 import Links from "./Links";
 import { isAuthenticate } from "../../auth/auth";
 
-const UserDashboard = () => {
+const AdminDashboard = () => {
   const {
     user: { _id, name, mail, role }
   } = isAuthenticate();
@@ -21,40 +21,33 @@ const UserDashboard = () => {
     }
   ];
 
-  const listHistory = [
-    {
-      name: "History"
-    }
-  ];
-
   const links = [
     {
-      name: "My cart",
-      to: "/cart"
+      name: "Create Category",
+      to: "/create/category"
     },
     {
-      name: "Update Profile",
-      to: "/profile/update"
+      name: "Create Product",
+      to: "/create/product"
     }
   ];
 
   return (
     <Layout
       className="container-fluid"
-      title="User Dashboard"
+      title="Admin Dashboard"
       description={`${name}'s Dashboard`}
     >
       <div className="row">
         <div className="col-3">
-          <Links links={links} text={"User links"} />
+          <Links links={links} text={"Admin links"} />
         </div>
         <div className="col-9">
-          <Card text={"User Infornation"} list={listInfo} />
-          <Card text={"Purchase history"} list={listHistory} />
+          <Card text={"Admin Infornation"} list={listInfo} />
         </div>
       </div>
     </Layout>
   );
 };
 
-export default UserDashboard;
+export default AdminDashboard;

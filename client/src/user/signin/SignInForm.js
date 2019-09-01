@@ -52,6 +52,10 @@ const SignInForm = ({ inputList }) => {
         return <Redirect to="/user/dashboard" />;
       }
     }
+
+    if (isAuthenticate()) {
+      return <Redirect to="/" />;
+    }
   };
 
   return (
