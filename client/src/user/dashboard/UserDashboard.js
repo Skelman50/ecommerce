@@ -1,48 +1,27 @@
 import React from "react";
 import Layout from "../../core/Layout";
+import UserCard from "./UserCard";
+import UserLinks from "./UserLinks";
 import { isAuthenticate } from "../../auth/auth";
 
 const UserDashboard = () => {
   const {
-    user: { _id, name, mail, role }
+    user: { name }
   } = isAuthenticate();
-  const listInfo = [
-    {
-      name
-    },
-    {
-      name: mail
-    },
-    {
-      name: role === 1 ? "Admin" : "Registered User"
-    }
-  ];
-
-  const listHistory = [
-    {
-      name: "History"
-    }
-  ];
-
-  const listMap = list =>
-    list.map((item, idx) => (
-      <li className="list-group-item" key={idx}>
-        {item.name}
-      </li>
-    ));
   return (
     <Layout
-      className="container"
+      className="container-fluid"
       title="User Dashboard"
-      description="User Dashboard"
+      description={`${name}'s Dashboard`}
     >
-      <div className="card mb-5">
-        <h3 className="card-header">User information</h3>
-        <ul className="list-group">{listMap(listInfo)}</ul>
-      </div>
-      <div className="card mb-5">
-        <h3 className="card-header">Purchase history</h3>
-        <ul className="list-group">{listMap(listHistory)}</ul>
+      <div className="row">
+        <div className="col-3">
+          <UserLinks />
+        </div>
+        <div className="col-9">
+          <UserCard text={"User Infornation"} isInfo={true} />
+          <UserCard text={"Purchase history"} />
+        </div>
       </div>
     </Layout>
   );
