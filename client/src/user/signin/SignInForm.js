@@ -1,17 +1,19 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import { apiService } from "../../services/api-service";
 import ShowMessage from "../helpers/ShowMessage";
+import { authenticate } from "../helpers/auth";
 
-const SignUpForm = ({ inputList }) => {
+const SignInForm = ({ inputList }) => {
   const [values, setValues] = useState({
-    name: "",
-    email: "",
-    password: "",
+    email: "skelman50@gmail.com",
+    password: "111111",
     error: false,
-    success: false
+    loading: false,
+    redirectToReferrer: false
   });
 
-  const { name, email, password, error, success } = values;
+  const { email, password, error, loading, redirectToReferrer } = values;
 
   const handleChange = name => event => {
     setValues({
@@ -21,30 +23,36 @@ const SignUpForm = ({ inputList }) => {
     });
   };
 
-  const signup = async user => {
-    const response = await apiService.authApi(user, "signup");
+  const signin = async user => {
+    setValues({ ...values, loading: true });
+    const response = await apiService.authApi(user, "signin");
     if (response.error) {
-      setValues({ ...values, error: response.error, success: false });
+      setValues({ ...values, error: response.error, loading: false });
     } else {
-      setValues({
-        ...values,
-        name: "",
-        email: "",
-        password: "",
-        error: false,
-        success: true
+      authenticate(response, () => {
+        setValues({
+          ...values,
+          redirectToReferrer: true
+        });
       });
     }
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    signup({ name, email, password });
+    signin({ email, password });
+  };
+
+  const redirectUser = () => {
+    if (redirectToReferrer) {
+      return <Redirect to="/" />;
+    }
   };
 
   return (
     <React.Fragment>
-      <ShowMessage error={error} success={success} />
+      <ShowMessage error={error} loading={loading} />
+      {redirectUser()}
       <form>
         {inputList.map((item, idx) => (
           <div className="form-group" key={idx}>
@@ -65,4 +73,4 @@ const SignUpForm = ({ inputList }) => {
   );
 };
 
-export default SignUpForm;
+export default SignInForm;

@@ -1,5 +1,7 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
+import { type } from "os";
+import { signout } from "../user/helpers/auth";
 
 const isActive = (history, path) => {
   const {
@@ -24,19 +26,33 @@ const Menu = ({ history }) => {
     {
       to: "/signup",
       name: "Signup"
+    },
+    {
+      name: "Signout",
+      isSignout: true
     }
   ];
 
   const linksList = () =>
     links.map((item, idx) => (
       <li className="nav-item" key={idx}>
-        <Link
-          className="nav-link"
-          to={item.to}
-          style={isActive(history, item.to)}
-        >
-          {item.name}
-        </Link>
+        {!item.isSignout ? (
+          <Link
+            className="nav-link"
+            to={item.to}
+            style={isActive(history, item.to)}
+          >
+            {item.name}
+          </Link>
+        ) : (
+          <span
+            className="nav-link"
+            style={{ cursor: "pointer", color: "#ffffff" }}
+            onClick={() => signout(() => history.push("/"))}
+          >
+            {item.name}
+          </span>
+        )}
       </li>
     ));
 
