@@ -27,6 +27,7 @@ const SignInForm = ({ inputList }) => {
   const signin = async user => {
     setValues({ ...values, loading: true });
     const response = await apiService.authApi(user, "signin");
+    console.log(response)
     if (response.error) {
       setValues({ ...values, error: response.error, loading: false });
     } else {
