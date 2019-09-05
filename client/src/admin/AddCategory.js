@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { isAuthenticate } from "../auth/auth";
 import Layout from "../core/Layout";
 import { apiService } from "../services/api-service";
@@ -25,6 +26,7 @@ const AddCategory = () => {
     }
     setError(false);
     setSuccess(true);
+    setName("");
   };
 
   const newCategoryForm = () => (
@@ -46,15 +48,23 @@ const AddCategory = () => {
 
   const showSuccess = () => {
     if (success) {
-      return <h3 className="text-success">{name} was created</h3>;
+      return <h3 className="text-success">New category was created</h3>;
     }
   };
 
   const showError = () => {
     if (error) {
-      return <h3 className="text-danger">{name} should be unique</h3>;
+      return <h3 className="text-danger">Category should be unique</h3>;
     }
   };
+
+  const goBack = () => (
+    <div className="mt-5">
+      <Link to="/admin/dashboard" className="text-warning">
+        Back to dashboard
+      </Link>
+    </div>
+  );
 
   return (
     <Layout
@@ -66,6 +76,7 @@ const AddCategory = () => {
           {showError()}
           {showSuccess()}
           {newCategoryForm()}
+          {goBack()}
         </div>
       </div>
     </Layout>

@@ -36,6 +36,23 @@ class ApiService {
       return data;
     }
   };
+
+  createProduct = async (userId, token, category) => {
+    try {
+      const { data } = await axios.post(
+        `${API}/products/create/${userId}`,
+        category,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
 }
 
 export const apiService = new ApiService();
