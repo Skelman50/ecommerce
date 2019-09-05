@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import Layout from "../core/Layout";
 import { isAuthenticate } from "../auth/auth";
 import { formGroupsList } from "./formGroupList";
+import { apiService } from "../services/api-service";
 
 const AddProduct = () => {
-  const { user, token } = isAuthenticate;
+  const { user, token } = isAuthenticate();
   const [values, setValues] = useState({
     name: "",
     description: "",
@@ -77,7 +78,10 @@ const AddProduct = () => {
                   <option value="1">Yes</option>
                 </React.Fragment>
               ) : (
-                <option value="5d6958fba1126b2742ac41c8">Node</option>
+                <React.Fragment>
+                  <option value="5d6958fba1126b2742ac41c8">Node</option>
+                  <option value="5d6958fba1126b2742ac41c8">PHP</option>
+                </React.Fragment>
               )}
             </select>
           </div>
@@ -97,8 +101,24 @@ const AddProduct = () => {
       }
     });
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    setValues({ ...values, error: false, loading: true });
+    const response = await apiService.createProduct(user._id, token, formData);
+    if (response.error) {
+      return setValues({ ...values, loading: false, error: response.error });
+    }
+    setValues({
+      ...values,
+      name: "",
+      description: "",
+      photo: "",
+      price: "",
+      quantity: "",
+      loading: false,
+      error: false,
+      createdProduct: response.name
+    });
   };
 
   const newPostForm = () => (

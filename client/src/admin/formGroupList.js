@@ -28,7 +28,7 @@ export const formGroupsList = ({
     labelName: "Category",
     value: category,
     isSelect: true,
-    change: handleChange("cateory")
+    change: handleChange("category")
   },
   {
     labelName: "Shipping",
