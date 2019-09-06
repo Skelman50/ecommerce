@@ -37,14 +37,48 @@ const AddProduct = () => {
     formData
   } = values;
 
+  const init = async () => {
+    const response = await apiService.getCategories();
+    if (response.error) {
+      return setValues({ ...values, error: response.error });
+    }
+    setValues({ ...values, categories: response, formData: new FormData() });
+  };
+
   useEffect(() => {
-    setValues({ ...values, formData: new FormData() });
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = name => event => {
     const value = name === "photo" ? event.target.files[0] : event.target.value;
     formData.set(name, value);
     setValues({ ...values, [name]: value });
+  };
+
+  const showError = () => {
+    if (error) {
+      return <div className="alert alert-danger">{error}</div>;
+    }
+  };
+  const showSuccess = () => {
+    if (createdProduct) {
+      return (
+        <div className="alert aler-info">
+          <h2>{`${createdProduct} is created`}</h2>
+        </div>
+      );
+    }
+  };
+
+  const showLoading = () => {
+    if (loading) {
+      return (
+        <div className="alert alert-success">
+          <h2>Loading...</h2>
+        </div>
+      );
+    }
   };
 
   const formGroup = () =>
@@ -74,13 +108,19 @@ const AddProduct = () => {
             <select className="form-control" onChange={item.change}>
               {item.isShipping ? (
                 <React.Fragment>
+                  <option>Please select shipping</option>
                   <option value="0">No</option>
                   <option value="1">Yes</option>
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  <option value="5d6958fba1126b2742ac41c8">Node</option>
-                  <option value="5d6958fba1126b2742ac41c8">PHP</option>
+                  <option>Please Select Category</option>
+                  {categories &&
+                    categories.map((category, idx) => (
+                      <option key={idx} value={category._id}>
+                        {category.name}
+                      </option>
+                    ))}
                 </React.Fragment>
               )}
             </select>
@@ -141,7 +181,12 @@ const AddProduct = () => {
   return (
     <Layout title="Add new product" description="Create new product">
       <div className="row">
-        <div className="col-md-8 offset-md-2">{newPostForm()}</div>
+        <div className="col-md-8 offset-md-2">
+          {showLoading()}
+          {showSuccess()}
+          {showError()}
+          {newPostForm()}
+        </div>
       </div>
     </Layout>
   );

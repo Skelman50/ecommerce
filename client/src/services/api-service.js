@@ -6,8 +6,9 @@ class ApiService {
     try {
       const { data } = await axios.post(`${API}/auth/${url}`, body);
       return data;
-    } catch (err) {
-      console.log(err);
+    } catch ({ response: { data } }) {
+      console.log(data);
+      return data;
     }
   };
 
@@ -32,6 +33,17 @@ class ApiService {
         }
       );
       return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  getCategories = async () => {
+    try {
+      const {
+        data: { categories }
+      } = await axios.get(`${API}/categories`);
+      return categories;
     } catch ({ response: { data } }) {
       return data;
     }

@@ -6,7 +6,7 @@ import { isAuthenticate } from "../../auth/auth";
 
 const AdminDashboard = () => {
   const {
-    user: { _id, name, mail, role }
+    user: { name, mail, role }
   } = isAuthenticate();
 
   const listInfo = [
