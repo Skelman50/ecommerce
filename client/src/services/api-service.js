@@ -65,6 +65,13 @@ class ApiService {
       return data;
     }
   };
+
+  getProducts = async sortBy => {
+    const { data } = await axios.get(
+      `${API}/products?sortBy=${sortBy}&order=desc&limit=6`
+    );
+    return data;
+  };
 }
 
 export const apiService = new ApiService();

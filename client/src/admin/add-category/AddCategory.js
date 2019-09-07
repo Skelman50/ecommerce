@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { isAuthenticate } from "../auth/auth";
-import Layout from "../core/Layout";
-import { apiService } from "../services/api-service";
+import { isAuthenticate } from "../../auth/auth";
+import Layout from "../../core/Layout";
+import { apiService } from "../../services/api-service";
 
 const AddCategory = () => {
   const [name, setName] = useState("");

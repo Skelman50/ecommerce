@@ -7,8 +7,8 @@ import UserDashboard from "./dashboard/UserDashboard";
 import PrivateRoute from "../auth/PrivateRoute";
 import AdminRoute from "../auth/AdminRouter";
 import AdminDashboard from "./dashboard/AdminDashboard";
-import AddCategory from "../admin/AddCategory";
-import AddProduct from "../admin/AddProduct";
+import AddCategory from "../admin/add-category/AddCategory";
+import AddProduct from "../admin/add-product/AddProduct";
 
 const Routes = () => {
   return (

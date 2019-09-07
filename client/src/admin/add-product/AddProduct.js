@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../core/Layout";
-import { isAuthenticate } from "../auth/auth";
-import { formGroupsList } from "./formGroupList";
-import { apiService } from "../services/api-service";
+import Layout from "../../core/Layout";
+import { isAuthenticate } from "../../auth/auth";
+import { apiService } from "../../services/api-service";
+import FormGroup from "./FormGroup";
 
 const AddProduct = () => {
   const { user, token } = isAuthenticate();
@@ -81,66 +81,6 @@ const AddProduct = () => {
     }
   };
 
-  const formGroup = () =>
-    formGroupsList({
-      handleChange,
-      description,
-      price,
-      category,
-      quantity,
-      name
-    }).map((item, idx) => {
-      if (item.isTextArea) {
-        return (
-          <div className="form-group" key={idx}>
-            <label className="text-muted">{item.labelName}</label>
-            <textarea
-              className="form-control"
-              value={item.value}
-              onChange={item.change}
-            />
-          </div>
-        );
-      } else if (item.isSelect) {
-        return (
-          <div className="form-group" key={idx}>
-            <label className="text-muted">{item.labelName}</label>
-            <select className="form-control" onChange={item.change}>
-              {item.isShipping ? (
-                <React.Fragment>
-                  <option>Please select shipping</option>
-                  <option value="0">No</option>
-                  <option value="1">Yes</option>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  <option>Please Select Category</option>
-                  {categories &&
-                    categories.map((category, idx) => (
-                      <option key={idx} value={category._id}>
-                        {category.name}
-                      </option>
-                    ))}
-                </React.Fragment>
-              )}
-            </select>
-          </div>
-        );
-      } else {
-        return (
-          <div className="form-group" key={idx}>
-            <label className="text-muted">{item.labelName}</label>
-            <input
-              className="form-control"
-              type={item.type}
-              value={item.value}
-              onChange={item.change}
-            />
-          </div>
-        );
-      }
-    });
-
   const handleSubmit = async e => {
     e.preventDefault();
     setValues({ ...values, error: false, loading: true });
@@ -155,10 +95,13 @@ const AddProduct = () => {
       photo: "",
       price: "",
       quantity: "",
+      category: "",
+      shipping: "",
       loading: false,
       error: false,
       createdProduct: response.name
     });
+    console.log("asdasdad");
   };
 
   const newPostForm = () => (
@@ -174,7 +117,15 @@ const AddProduct = () => {
           />
         </label>
       </div>
-      {formGroup()}
+      <FormGroup
+        handleChange={handleChange}
+        description={description}
+        price={price}
+        category={category}
+        quantity={quantity}
+        name={name}
+        categories={categories}
+      />
       <button className="btn btn-outline-primary">Create product</button>
     </form>
   );
