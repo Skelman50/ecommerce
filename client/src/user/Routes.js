@@ -9,12 +9,14 @@ import AdminRoute from "../auth/AdminRouter";
 import AdminDashboard from "./dashboard/AdminDashboard";
 import AddCategory from "../admin/add-category/AddCategory";
 import AddProduct from "../admin/add-product/AddProduct";
+import Shop from "../core/Shop";
 
 const Routes = () => {
   return (
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Home} />
+        <Route path="/shop" exact component={Shop} />
         <Route path="/signin" exact component={SignIn} />
         <Route path="/signup" exact component={SignUp} />
         <PrivateRoute path="/user/dashboard" exact component={UserDashboard} />

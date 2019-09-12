@@ -12,7 +12,7 @@ const Card = ({ product: { name, description, price, _id } }) => {
           <p>{description}</p>
           <p>${price}</p>
           <Link to="/">
-            <button className="btn btn-outline-primary mt2- mb-2">
+            <button className="btn btn-outline-primary mt2- mb-2 mr-2">
               View Product
             </button>
           </Link>

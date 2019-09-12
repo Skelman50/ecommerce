@@ -20,6 +20,11 @@ const Menu = ({ history }) => {
       isHome: true
     },
     {
+      to: "/shop",
+      name: "Shop",
+      isShop: true
+    },
+    {
       to: "/user/dashboard",
       name: "User Dashboard",
       isUserDashboard: true
@@ -52,7 +57,7 @@ const Menu = ({ history }) => {
   );
 
   const isLink = item => {
-    const { isSign, isUserDashboard, isAdminDashboard, isHome } = item;
+    const { isSign, isUserDashboard, isAdminDashboard, isHome, isShop } = item;
     if (
       (isSign && !isAuthenticate()) ||
       (isUserDashboard &&
@@ -61,7 +66,8 @@ const Menu = ({ history }) => {
       (isAdminDashboard &&
         isAuthenticate() &&
         isAuthenticate().user.role === 1) ||
-      isHome
+      isHome ||
+      isShop
     ) {
       return link(item);
     }
