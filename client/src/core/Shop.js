@@ -3,6 +3,7 @@ import Layout from "./Layout";
 import { apiService } from "../services/api-service";
 import Checkbox from "./Checkbox";
 import RadioBox from "./RadioBox";
+import Card from "./Card";
 import { prices } from "../services/fixedPrices";
 
 const Shop = () => {
@@ -16,7 +17,7 @@ const Shop = () => {
   const [error, setError] = useState(false);
   const [limit, setLimit] = useState(6);
   const [skip, setSkip] = useState(0);
-  const [filteredResult, setFilteredResult] = useState(0);
+  const [filteredResult, setFilteredResult] = useState([]);
 
   const init = async () => {
     const response = await apiService.getCategories();
@@ -51,7 +52,7 @@ const Shop = () => {
     if (response.error) {
       return setError(response.error);
     }
-    setFilteredResult(response);
+    setFilteredResult(response.products);
   };
 
   const handleFilters = (filters, filterBy) => {
@@ -83,7 +84,14 @@ const Shop = () => {
             <RadioBox prices={prices} handleFilters={handleFilters} />
           </div>
         </div>
-        <div className="col-8">{JSON.stringify(filteredResult)}</div>
+        <div className="col-8">
+          <h2 className="mb-4">Products</h2>
+          <div className="row">
+            {filteredResult.map((item, idx) => (
+              <Card product={item} key={idx} />
+            ))}
+          </div>
+        </div>
       </div>
     </Layout>
   );
