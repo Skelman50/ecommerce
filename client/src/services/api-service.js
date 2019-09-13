@@ -38,6 +38,19 @@ class ApiService {
     }
   };
 
+  getFilteredProduct = async (skip, limit, filters = {}) => {
+    try {
+      const { data } = await axios.post(`${API}/products/by/search`, {
+        skip,
+        limit,
+        filters
+      });
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
   getCategories = async () => {
     try {
       const {
