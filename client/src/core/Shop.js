@@ -15,9 +15,10 @@ const Shop = () => {
   });
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(false);
-  const [limit, setLimit] = useState(6);
+  const [limit, setLimit] = useState(2);
   const [skip, setSkip] = useState(0);
   const [filteredResult, setFilteredResult] = useState([]);
+  const [size, setSize] = useState();
 
   const init = async () => {
     const response = await apiService.getCategories();
@@ -53,6 +54,23 @@ const Shop = () => {
       return setError(response.error);
     }
     setFilteredResult(response.products);
+    setSize(response.size);
+    setSkip(0);
+  };
+
+  const loadMore = async () => {
+    let toSkip = skip + limit;
+    const response = await apiService.getFilteredProduct(
+      toSkip,
+      limit,
+      myFilters.filters
+    );
+    if (response.error) {
+      return setError(response.error);
+    }
+    setFilteredResult([...filteredResult, ...response.products]);
+    setSize(response.size);
+    setSkip(toSkip);
   };
 
   const handleFilters = (filters, filterBy) => {
@@ -66,6 +84,14 @@ const Shop = () => {
     loadFiltersResult(myFilters.filters);
     setMyFilters(newFilters);
   };
+
+  const loadMoreButton = () =>
+    size > 0 &&
+    size >= limit && (
+      <button className="btn btn-warning mb-5" onClick={loadMore}>
+        Load more
+      </button>
+    );
 
   return (
     <Layout
@@ -91,6 +117,8 @@ const Shop = () => {
               <Card product={item} key={idx} />
             ))}
           </div>
+          <hr />
+          {loadMoreButton()}
         </div>
       </div>
     </Layout>
