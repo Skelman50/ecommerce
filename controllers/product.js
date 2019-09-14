@@ -41,6 +41,26 @@ export const createProduct = (req, res) => {
   });
 };
 
+export const listSearch = async (req, res) => {
+  const {
+    query: { search, category }
+  } = req;
+  try {
+    const query = {};
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+      if (category && category !== "All") {
+        query.category = category;
+      }
+      const products = await Product.find(query).select("-photo");
+      res.json(products);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
 export const productById = async (req, res, next, id) => {
   try {
     const product = await Product.findById(id);

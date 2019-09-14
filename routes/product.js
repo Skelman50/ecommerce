@@ -15,7 +15,8 @@ import {
   relatedProductList,
   categoriesList,
   listBySearch,
-  getPhoto
+  getPhoto,
+  listSearch
 } from "../controllers/product.js";
 
 const productRouter = express.Router();
@@ -52,6 +53,7 @@ productRouter.get("/related/:productId", relatedProductList);
 productRouter.get("/categories", categoriesList);
 
 productRouter.post("/by/search", listBySearch);
+productRouter.get("/search", listSearch);
 productRouter.get("/once/photo/:productId", getPhoto);
 
 productRouter.param("userId", findUserbyID);

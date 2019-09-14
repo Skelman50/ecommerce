@@ -1,4 +1,5 @@
 import axios from "axios";
+import queryString from "query-string";
 import { API } from "../config";
 
 class ApiService {
@@ -80,10 +81,35 @@ class ApiService {
   };
 
   getProducts = async sortBy => {
-    const { data } = await axios.get(
-      `${API}/products?sortBy=${sortBy}&order=desc&limit=6`
-    );
-    return data;
+    try {
+      const { data } = await axios.get(
+        `${API}/products?sortBy=${sortBy}&order=desc&limit=6`
+      );
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  loadSingleProduct = async id => {
+    try {
+      const { data } = await axios.get(`${API}/products/once/${id}`);
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  searchList = async params => {
+    try {
+      const query = queryString.stringify(params);
+      console.log(params);
+      console.log("queryq", query);
+      const { data } = await axios.get(`${API}/products/search?${query}`);
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
   };
 }
 
