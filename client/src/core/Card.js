@@ -1,14 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import ShowImage from "./ShowImage";
+import { addItem } from "./helpers/cart-helpers";
 
-const Card = ({
-  product: { name, description, price, _id, category, createdAt, quantity },
-  closeViewButton
-}) => {
+const Card = ({ product, closeViewButton }) => {
+  const [redirect, setRedirect] = useState(false);
+  const {
+    name,
+    description,
+    price,
+    _id,
+    category,
+    createdAt,
+    quantity
+  } = product;
+  const addToCart = () => {
+    addItem(product, () => {
+      setRedirect(true);
+    });
+  };
+
+  const shouldRedirect = redirect => {
+    if (redirect) {
+      return <Redirect to="/cart" />;
+    }
+  };
+
   const showAddtocard = () => (
-    <button className="btn btn-outline-warning mt2- mb-2">Add to card</button>
+    <button className="btn btn-outline-warning mt2- mb-2" onClick={addToCart}>
+      Add to card
+    </button>
   );
 
   const showViewButton = () =>
@@ -31,6 +54,7 @@ const Card = ({
     <div className="card">
       <div className="card-header name">{name}</div>
       <div className="card-body">
+        {shouldRedirect(redirect)}
         <ShowImage item={{ name, _id }} url="products/once" />
         <p className="lead mt-4">{description.substring(0, 100)}</p>
         <p className="black-10">${price}</p>
