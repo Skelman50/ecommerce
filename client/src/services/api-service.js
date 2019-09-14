@@ -63,6 +63,15 @@ class ApiService {
     }
   };
 
+  listRelated = async id => {
+    try {
+      const { data } = await axios.get(`${API}/products/related/${id}`);
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
   createProduct = async (userId, token, category) => {
     try {
       const { data } = await axios.post(

@@ -63,7 +63,7 @@ export const listSearch = async (req, res) => {
 
 export const productById = async (req, res, next, id) => {
   try {
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate("category");
     if (!product) throw new Error();
     req.product = product;
     next();

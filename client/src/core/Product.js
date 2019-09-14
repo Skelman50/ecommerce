@@ -5,14 +5,20 @@ import Card from "./Card";
 
 const Product = props => {
   const [product, setProduct] = useState({});
+  const [relatedProduct, setrelatedProduct] = useState([]);
   const [error, setError] = useState(false);
 
   const loadSingleProduct = async productId => {
-    const response = await apiService.loadSingleProduct(productId);
-    if (response.error) {
-      return setError(response.error);
+    const product = await apiService.loadSingleProduct(productId);
+    if (product.error) {
+      return setError(product.error);
     }
-    setProduct(response);
+    setProduct(product);
+    const related = await apiService.listRelated(product._id);
+    if (related.error) {
+      return setError(related.error);
+    }
+    setrelatedProduct(related);
   };
 
   useEffect(() => {
@@ -22,7 +28,7 @@ const Product = props => {
       }
     } = props;
     loadSingleProduct(productId);
-  }, []);
+  }, [props.match.params.productId]);
 
   return (
     <Layout
@@ -33,9 +39,19 @@ const Product = props => {
       className="container-fluid"
     >
       <div className="row">
-        {product && product.description && (
-          <Card product={product} closeViewButton={true} />
-        )}
+        <div className="col-8">
+          {product && product.description && (
+            <Card product={product} closeViewButton={true} />
+          )}
+        </div>
+        <div className="col-4">
+          <h4>Related product</h4>
+          {relatedProduct.map((p, i) => (
+            <div className="mb-3" key={i}>
+              <Card product={p} />
+            </div>
+          ))}
+        </div>
       </div>
     </Layout>
   );

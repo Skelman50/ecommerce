@@ -8,6 +8,12 @@
   min-height: 100px;
 }
 
+.name {
+  background-color: indigo !important;
+  color: #fff;
+  font-weight: bold;
+}
+
 .jumbotron {
   width: 30wh;
   height: 30vh;
