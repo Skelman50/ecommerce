@@ -3,10 +3,17 @@ import { Redirect } from "react-router-dom";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import ShowImage from "./ShowImage";
-import { addItem } from "./helpers/cart-helpers";
+import { addItem, updateItem, removeItem } from "./helpers/cart-helpers";
 
-const Card = ({ product, closeViewButton }) => {
+const Card = ({
+  product,
+  closeViewButton,
+  showAddToCart = true,
+  cartUpdate = false,
+  showRemove = false
+}) => {
   const [redirect, setRedirect] = useState(false);
+  const [count, setCount] = useState(product.count);
   const {
     name,
     description,
@@ -28,11 +35,12 @@ const Card = ({ product, closeViewButton }) => {
     }
   };
 
-  const showAddtocard = () => (
-    <button className="btn btn-outline-warning mt2- mb-2" onClick={addToCart}>
-      Add to card
-    </button>
-  );
+  const showAddtocard = () =>
+    showAddToCart && (
+      <button className="btn btn-outline-warning mt2- mb-2" onClick={addToCart}>
+        Add to card
+      </button>
+    );
 
   const showViewButton = () =>
     !closeViewButton && (
@@ -50,6 +58,40 @@ const Card = ({ product, closeViewButton }) => {
       <span className="badge badge-primary badge-pill">Out Of stock</span>
     );
 
+  const handleChange = productId => event => {
+    setCount(event.target.value < 1 ? 1 : event.target.value);
+    if (event.target.value >= 1) {
+      updateItem(productId, event.target.value);
+    }
+  };
+
+  const showCartUpdate = () =>
+    cartUpdate && (
+      <div>
+        <div className="input-group mb-3">
+          <div className="input-group=prepend">
+            <span className="input-group-text">Adjust quantity</span>
+            <input
+              type="number"
+              className="form-control"
+              value={count}
+              onChange={handleChange(product._id)}
+            />
+          </div>
+        </div>
+      </div>
+    );
+
+  const showRemoveButton = () =>
+    showRemove && (
+      <button
+        className="btn btn-outline-danger mt2- mb-2"
+        onClick={() => removeItem(product._id)}
+      >
+        Remove Product
+      </button>
+    );
+
   return (
     <div className="card">
       <div className="card-header name">{name}</div>
@@ -64,6 +106,8 @@ const Card = ({ product, closeViewButton }) => {
         <br />
         {showViewButton()}
         {showAddtocard()}
+        {showRemoveButton()}
+        {showCartUpdate()}
       </div>
     </div>
   );
