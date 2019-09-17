@@ -28,6 +28,7 @@ const Product = props => {
       }
     } = props;
     loadSingleProduct(productId);
+    // eslint-disable-next-line
   }, [props.match.params.productId]);
 
   return (

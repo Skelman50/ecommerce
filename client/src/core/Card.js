@@ -8,6 +8,7 @@ import { addItem, updateItem, removeItem } from "./helpers/cart-helpers";
 const Card = ({
   product,
   closeViewButton,
+  updateCart,
   showAddToCart = true,
   cartUpdate = false,
   showRemove = false
@@ -61,7 +62,8 @@ const Card = ({
   const handleChange = productId => event => {
     setCount(event.target.value < 1 ? 1 : event.target.value);
     if (event.target.value >= 1) {
-      updateItem(productId, event.target.value);
+      const cart = updateItem(productId, event.target.value);
+      updateCart(cart);
     }
   };
 
@@ -82,11 +84,16 @@ const Card = ({
       </div>
     );
 
+  const handleRemove = () => {
+    const cart = removeItem(product._id);
+    updateCart(cart);
+  };
+
   const showRemoveButton = () =>
     showRemove && (
       <button
         className="btn btn-outline-danger mt2- mb-2"
-        onClick={() => removeItem(product._id)}
+        onClick={handleRemove}
       >
         Remove Product
       </button>

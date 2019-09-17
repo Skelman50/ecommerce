@@ -8,6 +8,7 @@ import { authRouter } from "./routes/auth.js";
 import { userRouter } from "./routes/user.js";
 import { categoryRouter } from "./routes/category.js";
 import { productRouter } from "./routes/product.js";
+import { braintreeRouter } from "./routes/braintree.js";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
+app.use("/api/braintree", braintreeRouter)
 
 const port = process.env.PORT;
 

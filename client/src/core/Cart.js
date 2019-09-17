@@ -3,12 +3,17 @@ import { Link } from "react-router-dom";
 import { getCart } from "./helpers/cart-helpers";
 import Card from "./Card";
 import Layout from "./Layout";
+import Checkout from "./Checkout";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
   useEffect(() => {
     setItems(getCart());
-  }, [items]);
+  }, []);
+
+  const updateCart = cart => {
+    setItems(cart);
+  };
 
   const showItems = items => (
     <div>
@@ -21,6 +26,7 @@ const Cart = () => {
           showAddToCart={false}
           cartUpdate={true}
           showRemove={true}
+          updateCart={updateCart}
         />
       ))}
     </div>
@@ -44,7 +50,9 @@ const Cart = () => {
           {items.length ? showItems(items) : noItemsMessage()}
         </div>
         <div className="col-6">
-          <p>Show checkout options/shipping address/total/update quantity</p>
+          <h2 className="mb-4">Your cart summary</h2>
+          <hr />
+          <Checkout products={items} />
         </div>
       </div>
     </Layout>

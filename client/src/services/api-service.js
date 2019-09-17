@@ -112,9 +112,20 @@ class ApiService {
   searchList = async params => {
     try {
       const query = queryString.stringify(params);
-      console.log(params);
-      console.log("queryq", query);
       const { data } = await axios.get(`${API}/products/search?${query}`);
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  getBraintreeClientToken = async (userId, token) => {
+    try {
+      const { data } = await axios.get(`${API}/braintree/getToken/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       return data;
     } catch ({ response: { data } }) {
       return data;
