@@ -19,11 +19,43 @@ const promiseGateway = () => {
   });
 };
 
+const promiseTransaction = (amount, paymentMethodNonce) => {
+  console.log(paymentMethodNonce)
+  return new Promise((res, rej) => {
+    gateway.transaction.sale(
+      {
+        amount,
+        paymentMethodNonce,
+        options: {
+          submitForSettlement: true
+        }
+      },
+      (error, result) => {
+        if (error) rej(error);
+        else res(result);
+      }
+    );
+  });
+};
+
 export const generateToken = async (req, res) => {
   try {
     const response = await promiseGateway();
     res.send(response);
   } catch (error) {
     res.status(500).json(err);
+  }
+};
+
+export const processPayment = async (req, res) => {
+  const {
+    body: { paymentMethodNonce, amount }
+  } = req;
+  try {
+    const result = await promiseTransaction(amount, paymentMethodNonce);
+    res.json(result);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error);
   }
 };

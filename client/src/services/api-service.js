@@ -131,6 +131,23 @@ class ApiService {
       return data;
     }
   };
+
+  processPayment = async (userId, token, paymentData) => {
+    try {
+      const { data } = await axios.post(
+        `${API}/braintree/payment/${userId}`,
+        paymentData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
 }
 
 export const apiService = new ApiService();
