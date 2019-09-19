@@ -1,7 +1,6 @@
 import React from "react";
 
 const Card = ({ text, list }) => {
-  console.log(list)
   const listMap = list =>
     list.map((item, idx) => (
       <li className="list-group-item" key={idx}>
