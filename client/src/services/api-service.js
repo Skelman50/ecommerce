@@ -148,6 +148,23 @@ class ApiService {
       return data;
     }
   };
+
+  createOrder = async (userId, token, order) => {
+    try {
+      const { data } = await axios.post(
+        `${API}/order/create/${userId}`,
+        { order },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
 }
 
 export const apiService = new ApiService();

@@ -8,11 +8,14 @@ import { emptyCart, updateItem } from "./helpers/cart-helpers";
 const Checkout = ({ products, updateCart }) => {
   const [data, setData] = useState({
     success: false,
+    loading: false,
     clientToken: null,
     error: false,
     instanse: {},
     address: ""
   });
+
+  const { address } = data;
 
   const userId = isAuthenticate() && isAuthenticate().user._id;
   const token = isAuthenticate() && isAuthenticate().token;
@@ -42,20 +45,29 @@ const Checkout = ({ products, updateCart }) => {
     <div className="alert alert-info">Thank you. Payment success!</div>
   );
 
+  const orderData = (transactionId, amount) => ({
+    products,
+    amount,
+    transaction_id: transactionId,
+    address
+  });
+
+  const showLoading = () => data.loading && <h2>Loading...</h2>;
   const buy = async () => {
     try {
+      setData({ ...data, loading: true });
       const { nonce } = await data.instanse.requestPaymentMethod();
       const paymentData = { paymentMethodNonce: nonce, amount: getTotal() };
-      const { success } = await apiService.processPayment(
-        userId,
-        token,
-        paymentData
-      );
-      setData({ ...data, success });
+      const {
+        transaction: { id, amount }
+      } = await apiService.processPayment(userId, token, paymentData);
+      const order = orderData(id, amount);
+      const response = await apiService.createOrder(userId, token, order);
+      setData({ ...data, success: true, loading: false });
       updateCart(emptyCart());
       console.log("payment Success");
     } catch (error) {
-      setData({ ...data, error: error.message });
+      setData({ ...data, error: error.message, loading: false });
     }
   };
 
@@ -63,10 +75,27 @@ const Checkout = ({ products, updateCart }) => {
     <div className="alert alert-danger">{data.error}</div>
   );
 
+  const handleAddress = e => {
+    setData({ ...data, address: e.target.value });
+  };
+
+  const textAreaForDropIn = () => (
+    <div className="form-group mb-3">
+      <label className="text-muted">Delivery Address</label>
+      <textarea
+        className="form-control"
+        value={address}
+        placeholder="Type your address delivety"
+        onChange={handleAddress}
+      />
+    </div>
+  );
+
   const showDropIn = () => (
     <div onBlur={() => setData({ ...data, error: false })}>
       {data.clientToken !== null && products.length > 0 && (
         <div>
+          {textAreaForDropIn()}
           <DropIn
             options={{
               authorization: data.clientToken,
@@ -95,6 +124,7 @@ const Checkout = ({ products, updateCart }) => {
   return (
     <div>
       <h2>Total: ${getTotal()}</h2>
+      {showLoading()}
       {data.error && showError()}
       {data.success && showSuccess()}
       {showCheckOut()}
