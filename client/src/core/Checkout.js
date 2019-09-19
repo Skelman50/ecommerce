@@ -3,7 +3,7 @@ import DropIn from "braintree-web-drop-in-react";
 import { Link } from "react-router-dom";
 import { isAuthenticate } from "../auth/auth";
 import { apiService } from "../services/api-service";
-import { emptyCart, updateItem } from "./helpers/cart-helpers";
+import { emptyCart } from "./helpers/cart-helpers";
 
 const Checkout = ({ products, updateCart }) => {
   const [data, setData] = useState({
@@ -33,6 +33,7 @@ const Checkout = ({ products, updateCart }) => {
 
   useEffect(() => {
     getToken(userId, token);
+    // eslint-disable-next-line
   }, []);
   const getTotal = () => {
     return products.reduce(

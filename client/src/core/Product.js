@@ -18,6 +18,8 @@ const Product = props => {
     if (related.error) {
       return setError(related.error);
     }
+
+    setError(false);
     setrelatedProduct(related);
   };
 
@@ -31,6 +33,9 @@ const Product = props => {
     // eslint-disable-next-line
   }, [props.match.params.productId]);
 
+  const showError = () =>
+    error && <div className="alert alert-danger">{error}</div>;
+
   return (
     <Layout
       title={product && product.name}
@@ -39,6 +44,7 @@ const Product = props => {
       }
       className="container-fluid"
     >
+      {showError()}
       <div className="row">
         <div className="col-8">
           {product && product.description && (

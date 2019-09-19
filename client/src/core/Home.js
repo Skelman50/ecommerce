@@ -14,10 +14,14 @@ const Home = () => {
     if (response.error) {
       return setError(response.error);
     }
+    setError(false);
     type === "sold"
       ? setProductsBySell(response)
       : setProductsArrival(response);
   };
+
+  const showError = () =>
+    error && <div className="alert alert-danger">{error}</div>;
 
   useEffect(() => {
     fetchProducts("sold");
@@ -30,6 +34,7 @@ const Home = () => {
       description="Node React App"
       className="container-fluid"
     >
+      {showError()}
       <Search />
       <h2 className="mb-4">Best Sellers</h2>
       <div className="row">

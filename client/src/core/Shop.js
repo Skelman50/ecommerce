@@ -15,10 +15,11 @@ const Shop = () => {
   });
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(false);
-  const [limit, setLimit] = useState(2);
   const [skip, setSkip] = useState(0);
   const [filteredResult, setFilteredResult] = useState([]);
   const [size, setSize] = useState();
+
+  const limit = 3;
 
   const init = async () => {
     const response = await apiService.getCategories();
@@ -32,14 +33,18 @@ const Shop = () => {
   useEffect(() => {
     init();
     loadFiltersResult(skip, limit, myFilters.filters);
+    // eslint-disable-next-line
   }, []);
 
   const handlePrice = value => {
     const data = prices;
     let array = [];
 
+    // eslint-disable-next-line
     for (let key in data) {
-      if (data[key]._id === parseInt(value)) array = data[key].array;
+      if (data[key]._id === parseInt(value)) {
+        array = data[key].array;
+      }
     }
     return array;
   };
@@ -73,6 +78,9 @@ const Shop = () => {
     setSkip(toSkip);
   };
 
+  const showError = () =>
+    error && <div className="alert alert-danger">{error}</div>;
+
   const handleFilters = (filters, filterBy) => {
     const newFilters = { ...myFilters };
     newFilters.filters[filterBy] = filters;
@@ -99,6 +107,7 @@ const Shop = () => {
       description="Search and find books"
       className="container-fluid"
     >
+      {showError()}
       <div className="row">
         <div className="col-4">
           <h2>Filter by categories</h2>
