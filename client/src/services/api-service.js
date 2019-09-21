@@ -165,6 +165,19 @@ class ApiService {
       return data;
     }
   };
+
+  listOrders = async (userId, token) => {
+    try {
+      const { data } = await axios.get(`${API}/order/list/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
 }
 
 export const apiService = new ApiService();

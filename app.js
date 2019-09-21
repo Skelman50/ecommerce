@@ -20,7 +20,8 @@ const databaseURL = process.env.DATABASE;
 mongoose
   .connect(databaseURL, {
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
   })
   .then(() => console.log("Database start"));
 

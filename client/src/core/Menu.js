@@ -36,6 +36,11 @@ const Menu = ({ history }) => {
       isAdminDashboard: true
     },
     {
+      to: "/admin/orders",
+      name: "View orders",
+      isOrders: true
+    },
+    {
       to: "/signin",
       name: "Signin",
       isSign: true
@@ -74,14 +79,15 @@ const Menu = ({ history }) => {
       isAdminDashboard,
       isHome,
       isShop,
-      isCart
+      isCart,
+      isOrders
     } = item;
     if (
       (isSign && !isAuthenticate()) ||
       (isUserDashboard &&
         isAuthenticate() &&
         isAuthenticate().user.role === 0) ||
-      (isAdminDashboard &&
+      ((isAdminDashboard || isOrders) &&
         isAuthenticate() &&
         isAuthenticate().user.role === 1) ||
       isHome ||
