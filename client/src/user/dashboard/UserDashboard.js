@@ -6,7 +6,7 @@ import { isAuthenticate } from "../../auth/auth";
 
 const UserDashboard = () => {
   const {
-    user: { name, mail, role }
+    user: { name, mail, role, _id }
   } = isAuthenticate();
 
   const listInfo = [
@@ -34,7 +34,7 @@ const UserDashboard = () => {
     },
     {
       name: "Update Profile",
-      to: "/profile/update"
+      to: `/profile/${_id}`
     }
   ];
 

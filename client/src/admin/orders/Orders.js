@@ -6,6 +6,7 @@ import { isAuthenticate } from "../../auth/auth";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [statusValues, setStatusValues] = useState([]);
   const {
     user: { _id, name },
     token
@@ -19,9 +20,50 @@ const Orders = () => {
     }
   };
 
+  const loadOrdersStatus = async (_id, token) => {
+    const response = await apiService.getStatusValues(_id, token);
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      setStatusValues(response);
+    }
+  };
+
   useEffect(() => {
     loadOrders(_id, token);
-  });
+    loadOrdersStatus(_id, token);
+  }, []);
+
+  const handleStatusSelect = async (e, orderId) => {
+    const response = await apiService.updateStatus(
+      _id,
+      token,
+      orderId,
+      e.target.value
+    );
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      await loadOrders(_id, token);
+    }
+  };
+
+  const showStatus = o => (
+    <div className="form-group">
+      <h3 className="mark mb-4">Status: {o.status}</h3>
+      <select
+        className="form-control"
+        onChange={e => handleStatusSelect(e, o._id)}
+      >
+        <option>Update Status</option>
+        {statusValues.map((s, i) => (
+          <option value={s} key={i}>
+            {s}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
 
   const showInput = (key, value) => (
     <div className="input-group mb-2 mr-sm-2">
@@ -56,7 +98,7 @@ const Orders = () => {
                 <span className="bg-primary"> Order ID: {o._id}</span>
               </h2>
               <ul className="list-group mb-2">
-                <li className="list-group-item">{o.status}</li>
+                <li className="list-group-item">{showStatus(o)}</li>
                 <li className="list-group-item">
                   Transaction ID: {o.transaction_id}
                 </li>

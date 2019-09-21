@@ -4,7 +4,10 @@ import {
   createOrder,
   pushHistory,
   decreaseQuantity,
-  listOrders
+  listOrders,
+  getStatusValues,
+  orderbyId,
+  updateOrderStatus
 } from "../controllers/order.js";
 import {
   requireSignIni,
@@ -23,14 +26,25 @@ orderRouter.post(
   createOrder
 );
 
+orderRouter.get("/list/:userId", requireSignIni, isAuth, isAdmin, listOrders);
+
 orderRouter.get(
-  "/list/:userId",
+  "/status-values/:userId",
   requireSignIni,
   isAuth,
   isAdmin,
-  listOrders
+  getStatusValues
+);
+
+orderRouter.put(
+  "/:orderId/status/:userId",
+  requireSignIni,
+  isAuth,
+  isAdmin,
+  updateOrderStatus
 );
 
 orderRouter.param("userId", findUserbyID);
+orderRouter.param("orderId", orderbyId);
 
 export { orderRouter };

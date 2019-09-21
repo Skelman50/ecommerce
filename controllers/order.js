@@ -78,3 +78,33 @@ export const listOrders = async (req, res) => {
     res.status(500).json({ error });
   }
 };
+
+export const getStatusValues = async (req, res) => {
+  res.json(Order.schema.path("status").enumValues);
+};
+
+export const orderbyId = async (req, res, next, id) => {
+  try {
+    const order = await Order.findById(id).populate(
+      "products.product",
+      "name price"
+    );
+    if (!order) throw new Error();
+    req.order = order;
+    next();
+  } catch (error) {
+    res.status(404).json({ error: "Order not found" });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+  const {
+    body: { orderId, status }
+  } = req;
+  try {
+    const order = await Order.update({ _id: orderId }, { $set: { status } });
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};

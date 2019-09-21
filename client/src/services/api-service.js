@@ -178,6 +178,73 @@ class ApiService {
       return data;
     }
   };
+
+  getStatusValues = async (userId, token) => {
+    try {
+      const { data } = await axios.get(`${API}/order/status-values/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  updateStatus = async (userId, token, orderId, status) => {
+    try {
+      const { data } = await axios.put(
+        `${API}/order/${orderId}/status/${userId}`,
+        { status, orderId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  getUserInfo = async (userId, token) => {
+    try {
+      const { data } = await axios.get(`${API}/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  updateUserProfile = async (userId, token, user) => {
+    try {
+      const { data } = await axios.put(`${API}/user/${userId}`, user, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  updateUser = (user, next) => {
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("jwt")) {
+        const auth = JSON.parse(localStorage.getItem("jwt"));
+        auth.user = user;
+        localStorage.setItem("jwt", JSON.stringify(auth));
+        next();
+      }
+    }
+  };
 }
 
 export const apiService = new ApiService();
