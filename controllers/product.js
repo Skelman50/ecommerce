@@ -104,15 +104,6 @@ export const updateProduct = async (req, res) => {
         error: "Image could not be uploaded"
       });
     }
-    const isValid = validator.formDataValidation({
-      ...fields,
-      ...files
-    });
-    if (!isValid) {
-      return res.status(400).json({
-        error: "All fields ar required"
-      });
-    }
     let product = req.product;
     product = _.extend(product, fields);
     if (files.photo) {

@@ -73,3 +73,7 @@
     background-position: 0% 50%;
   }
 }
+
+.badge.badge-danger.badge-pill:hover {
+  cursor: pointer;
+}
