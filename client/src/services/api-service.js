@@ -239,10 +239,74 @@ class ApiService {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("jwt")) {
         const auth = JSON.parse(localStorage.getItem("jwt"));
-        auth.user = user;
+        auth.user = { ...user, role: auth.user.role };
         localStorage.setItem("jwt", JSON.stringify(auth));
         next();
       }
+    }
+  };
+
+  getPurchase = async (userId, token) => {
+    try {
+      const { data } = await axios.get(`${API}/user/ordersByUser/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  getAdminProducts = async () => {
+    try {
+      const { data } = await axios.get(`${API}/products`);
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  getSingleProduct = async productId => {
+    try {
+      const { data } = await axios.get(`${API}/products/once/${productId}`);
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  deleteProduct = async (userId, productId, token) => {
+    try {
+      const { data } = await axios.delete(
+        `${API}/products/${productId}/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
+    }
+  };
+
+  updateProduct = async (userId, productId, token, product) => {
+    try {
+      const { data } = await axios.put(
+        `${API}/products/${productId}/${userId}`,
+        product,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return data;
+    } catch ({ response: { data } }) {
+      return data;
     }
   };
 }

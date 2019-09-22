@@ -1,4 +1,5 @@
 import { User } from "../models/user.js";
+import { Order } from "../models/order.js";
 
 export const findUserbyID = async (req, res, next, id) => {
   try {
@@ -36,6 +37,20 @@ export const updateUser = async (req, res) => {
     user.hashed_password = undefined;
     user.salt = undefined;
     res.json(user);
+  } catch (error) {
+    res.status(400).json({ error: "User not found" });
+  }
+};
+
+export const purchaseHistory = async (req, res) => {
+  const {
+    profile: { _id }
+  } = req;
+  try {
+    const orders = await Order.find({ user: _id })
+      .populate("user", "_id name")
+      .sort("-created");
+    res.json(orders);
   } catch (error) {
     res.status(400).json({ error: "User not found" });
   }

@@ -1,5 +1,10 @@
 import express from "express";
-import { findUserbyID, getUser, updateUser } from "../controllers/user.js";
+import {
+  findUserbyID,
+  getUser,
+  updateUser,
+  purchaseHistory
+} from "../controllers/user.js";
 import {
   requireSignIni,
   isAuth,
@@ -21,6 +26,12 @@ userRouter.get(
 );
 
 userRouter.get("/:userId", requireSignIni, isAuth, getUser);
+userRouter.get(
+  "/ordersByUser/:userId",
+  requireSignIni,
+  isAuth,
+  purchaseHistory
+);
 userRouter.put("/:userId", requireSignIni, isAuth, updateUser);
 
 userRouter.param("userId", findUserbyID);

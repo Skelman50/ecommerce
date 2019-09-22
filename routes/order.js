@@ -36,7 +36,7 @@ orderRouter.get(
   getStatusValues
 );
 
-orderRouter.put(
+orderRouter.get(
   "/:orderId/status/:userId",
   requireSignIni,
   isAuth,

@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../core/Layout";
 import Card from "./Card";
 import Links from "./Links";
 import { isAuthenticate } from "../../auth/auth";
+import { apiService } from "../../services/api-service";
 
 const UserDashboard = () => {
   const {
-    user: { name, mail, role, _id }
+    user: { name, mail, role, _id },
+    token
   } = isAuthenticate();
+
+  const [history, setHistory] = useState([]);
+
+  const init = async () => {
+    const response = await apiService.getPurchase(_id, token);
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      setHistory(response);
+    }
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
 
   const listInfo = [
     {
@@ -18,12 +35,6 @@ const UserDashboard = () => {
     },
     {
       name: role === 1 ? "Admin" : "Registered User"
-    }
-  ];
-
-  const listHistory = [
-    {
-      name: "History"
     }
   ];
 
@@ -49,8 +60,8 @@ const UserDashboard = () => {
           <Links links={links} text={"User links"} />
         </div>
         <div className="col-9">
-          <Card text={"User Infornation"} list={listInfo} />
-          <Card text={"Purchase history"} list={listHistory} />
+          <Card text={"User Infornation"} listInfo={listInfo} />
+          <Card text={"Purchase history"} history={history} />
         </div>
       </div>
     </Layout>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import Layout from "../../core/Layout";
 import { apiService } from "../../services/api-service";
 import { isAuthenticate } from "../../auth/auth";
@@ -18,7 +19,7 @@ const Profile = ({
   });
 
   const { name, email, error, success, password } = values;
-  const { token } = isAuthenticate();
+  const { token, role } = isAuthenticate();
 
   const init = async userId => {
     const { error, name, email } = await apiService.getUserInfo(userId, token);
@@ -28,13 +29,36 @@ const Profile = ({
     setValues({ ...values, name, email });
   };
 
-  const handleClickSubmit = e => {
-    e.preventDefaut();
+  const handleClickSubmit = async e => {
+    e.preventDefault();
+    const {
+      error,
+      name: Name,
+      email: Email
+    } = await apiService.updateUserProfile(userId, token, {
+      name,
+      email,
+      password
+    });
+    if (error) {
+      return setValues({ ...values, error });
+    }
+    apiService.updateUser({ error, name, email, _id: userId, role }, () => {
+      setValues({ ...values, name: Name, email: Email, success: true });
+    });
   };
 
-  const handleChange = e => {};
+  const redirectUser = () => {
+    if (success) {
+      return <Redirect to="/cart" />;
+    }
+  };
+
+  const handleChange = name => e => {
+    setValues({ ...values, error: false, [name]: e.target.value });
+  };
   const profileUpdate = (name, email, password) => (
-    <form>
+    <form onSubmit={handleClickSubmit}>
       {inputList(name, email, password).map(({ value, type, name }, i) => (
         <div className="form-group" key={i}>
           <label className="text-muted">{name}</label>
@@ -46,7 +70,7 @@ const Profile = ({
           />
         </div>
       ))}
-      <button onClick={handleClickSubmit}>Submit</button>
+      <button className="btn btn-outline-primary">Submit</button>
     </form>
   );
 
@@ -61,6 +85,7 @@ const Profile = ({
       classname="container-fluid"
     >
       <h2>Profile Update</h2>
+      {redirectUser()}
       {profileUpdate(name, email, password)}
     </Layout>
   );

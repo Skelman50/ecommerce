@@ -29,7 +29,11 @@ const AdminDashboard = () => {
     {
       name: "Create Product",
       to: "/create/product"
-    }
+    },
+    {
+      name: "Manage Products",
+      to: "/admin/products"
+    },
   ];
 
   return (
@@ -43,7 +47,7 @@ const AdminDashboard = () => {
           <Links links={links} text={"Admin links"} />
         </div>
         <div className="col-9">
-          <Card text={"Admin Infornation"} list={listInfo} />
+          <Card text={"Admin Infornation"} listInfo={listInfo} />
         </div>
       </div>
     </Layout>
